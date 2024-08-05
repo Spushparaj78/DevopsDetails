@@ -1,0 +1,113 @@
+
+-------------
+Steps for installing Ansible 
+----------------------------Ansible Master Node Connect -----------------------------------------
+[root@ip-172-31-26-70 ec2-user]# history
+    1  sudo update
+    2  yum update
+    3  wget https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+    4  ls
+    5  yum install epel-next-release-latest-9.noarch.rpm
+    6  rm -rf epel-next-release-latest-9.noarch.rpm
+    7  wget https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+    8  ls
+    9  amazon-linux-extras install epel -y
+   10  yum update -y
+   11  yum install git python python-level python-pip openssl ansible –y
+   12  ansible --version
+   13  git --version
+   14  python --version
+   15  history
+***********************************************************************************************
+Ansible Master Server Changes 
+-----------------------------------------------
+Step 1:---------Edit the hosts file in master
+
+/etc/ansible/hosts 
+$ vi hosts
+# Add the Private Ip address  Worker-node1 & worker-node2 in host file
+[demo]
+172.31.16.99
+172.31.29.158
+:wq
+
+Step 2:----------Edit the ansible.cfg file in master
+
+UnComment for to active the Inventory & sudo-user variables
+
+[root@ip-172-31-26-70 ec2-user]#/etc/ansible
+$ vi ansible.cfg
+inventory      = /etc/ansible/hosts
+sudo_user      = root
+:wq
+
+Step 3:------------ Swich to /home/ec2-user----------
+
+[root@ip-172-31-26-70 ec2-user]# adduser ansible-user
+[root@ip-172-31-26-70 ec2-user]# passwd
+Changing password for user root.
+New password:ansible123
+Retype new password:ansible123
+passwd: all authentication tokens updated successfully.
+
+Step 4:----------Edit the sudo file in master
+
+[root@ip-172-31-26-70 ec2-user]# visudo
+root    ALL=(ALL)       ALL
+ansible ALL=(ALL) NOPASSWD:  ALL
+:wq
+
+Step5 :----------Edit the SSHD_config file in master
+
+[root@ip-172-31-26-70 ec2-user]#vi /etc/ssh/sshd_config
+#Uncomment the below lines
+PermitRootLogin yes
+PasswordAuthentication yes
+:wq
+
+Step6: ----------Restart the sshd Service
+------------------------
+[root@ip-172-31-26-70 ec2-user]#service sshd restart
+
+******************************************************************
+Ansible Worker Node1 & Node 2 Changes 
+-------------------------------------------
+User Details Node 1 (PVT)ip-172-31-16-99 : User: ansible-n1user 
+User Details Node 2 (PVT)ip-172-31-29-158 : User: ansible-n2user 
+
+Step1 ---------------------------------------------------------------
+#Create a USER & PASSWORD 
+# Worker-NODE-2 PVT Address 
+[ec2-user@ip-172-31-29-158 ~]$ sudo su
+[root@ip-172-31-29-158 ec2-user]# adduser ansible-n2user
+[root@ip-172-31-29-158 ec2-user]# passwd
+Changing password for user root.
+New password:ansible123
+Retype new password:ansible123
+
+Step 2:----------Edit the sudo file in master
+
+[root@ip-172-31-29-158 ec2-user]# visudo
+
+root    ALL=(ALL)       ALL
+ansible-n2user ALL=(ALL) NOPASSWD:  ALL
+:wq
+
+Step3 :----------Edit the SSHD_config file in master
+[root@ip-172-31-29-158 ec2-user]#vi /etc/ssh/sshd_config
+#Uncomment the below lines
+PermitRootLogin yes
+PasswordAuthentication yes
+:wq
+
+Step4: ----------Restart the sshd Service
+[root@ip-172-31-26-70 ec2-user]#service sshd restart
+
+***********************************************************************************
+#In Ansible master Node connect the ansible-user 
+[root@ip-172-31-26-70 ec2-user]#su - ansible-user
+
+#Connect the worker node 1 & node by specifying Pvt ip address in ssh command
+[root@ip-172-31-26-70 ec2-user]#su 
+[root@ip-172-31-26-70 ec2-user]#ssh 172.31.16.99
+
