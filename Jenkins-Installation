@@ -1,0 +1,23 @@
+Jenkins Install
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    4  ls
+    5  sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+    6  #sudo amazon-linux-extras install epel
+    7  sudo yum install java-11*
+    8  java -version
+    9  sudo yum install jenkins -y
+   10  jenkins --version
+
+systemctl status jenkins
+   15  sudo systemctl start jenkins
+   16  systemctl status Jenkins
+   17 sudo systemctl stop jenkins
+
+https://15.207.116.74:8080/
+
+This may also be found at: /home/ec2-user/.jenkins/secrets/initialAdminPassword
+
+/var/lib/jenkins/secrets/initialAdminPassword
+dafa53e7e2b74a7e98eae618b826c9eb
+
+admin / admin123
