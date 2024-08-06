@@ -43,11 +43,11 @@ sudo_user      = root
 
 Step 3:------------ Swich to /home/ec2-user----------
 
-[root@ip-172-31-26-70 ec2-user]# adduser ansible-user
+[root@ip-172-31-26-70 ec2-user]# adduser ansible
 [root@ip-172-31-26-70 ec2-user]# passwd
 Changing password for user root.
-New password:ansible123
-Retype new password:ansible123
+New password:test123
+Retype new password:test123
 passwd: all authentication tokens updated successfully.
 
 Step 4:----------Edit the sudo file in master
@@ -72,18 +72,18 @@ Step6: ----------Restart the sshd Service
 ******************************************************************
 Ansible Worker Node1 & Node 2 Changes 
 -------------------------------------------
-User Details Node 1 (PVT)ip-172-31-16-99 : User: ansible-n1user 
-User Details Node 2 (PVT)ip-172-31-29-158 : User: ansible-n2user 
+User Details Node 1 (PVT)ip-172-31-16-99 : User: ansible
+User Details Node 2 (PVT)ip-172-31-29-158 : User: ansible
 
 Step1 ---------------------------------------------------------------
 #Create a USER & PASSWORD 
 # Worker-NODE-2 PVT Address 
 [ec2-user@ip-172-31-29-158 ~]$ sudo su
-[root@ip-172-31-29-158 ec2-user]# adduser ansible-n2user
+[root@ip-172-31-29-158 ec2-user]# adduser ansible
 [root@ip-172-31-29-158 ec2-user]# passwd
 Changing password for user root.
-New password:ansible123
-Retype new password:ansible123
+New password:test123
+Retype new password:test123
 
 Step 2:----------Edit the sudo file in master
 
@@ -104,10 +104,21 @@ Step4: ----------Restart the sshd Service
 [root@ip-172-31-26-70 ec2-user]#service sshd restart
 
 ***********************************************************************************
-#In Ansible master Node connect the ansible-user 
-[root@ip-172-31-26-70 ec2-user]#su - ansible-user
+#In Ansible master Node connect the ansible <user> 
+[root@ip-172-31-26-70 ec2-user]#su - ansible
 
 #Connect the worker node 1 & node by specifying Pvt ip address in ssh command
 [root@ip-172-31-26-70 ec2-user]#su 
 [root@ip-172-31-26-70 ec2-user]#ssh 172.31.16.99
+Successfully connected 
+exit
+[root@ip-172-31-26-70 ec2-user]#ssh 172.31.29.158
+Successfully connected 
+exit
+
+
+
+
+
+
 
