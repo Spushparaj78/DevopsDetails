@@ -1,0 +1,126 @@
+PROMETHEUS-GRAFANA
+----------------------
+PROMETHEUS INSTALLATION AND CONFIG
+-----------------------------------------
+#Download the Linux based prometheus software from GitHub 
+wget https://github.com/prometheus/prometheus/releases/download/v2.49.0-rc.1/prometheus-2.49.0-rc.1.linux-amd64.tar.gz
+
+#Extract the prometheus Folder   
+tar xvf prometheus-2.49.0-rc.1.linux-amd64.tar.gz 
+
+#Access the folder    
+ cd prometheus-2.49.0-rc.1.linux-amd64/
+
+#Run the prometheus 
+ ./prometheus 
+
+#Access the Public IPAddresses from Ec2-instance with port 9090
+http://43.205.216.72:9090/
+
+#Copy all the files from below folder
+   cp -r . /usr/local/bin/prometheus
+   
+#Create the prometheus.service file for the below [Unit, Service, Install] by using VI editor.   
+vi /etc/systemd/system/prometheus.service
+
+[Unit]
+Description=Prometheus service
+After=network.target
+
+[Service]
+Type=Simple
+ExecStart=/usr/local/bin/prometheus/prometheus --config.file=/usr/local/bin/prometheus/prometheus.yml
+
+[Install]
+WantedBy=multi-user.target﻿
+
+#Restart the Prometheus service
+  service prometheus restart
+
+#Status of the Prometheus service
+  service prometheus status
+
+#View the Server metrics in url
+http://43.205.216.72:9090/metrics
+
+***************************************************************************************************************************
+INSTALLATION & CONFIG OF NODE_EXPORTER
+-----------------------------------------
+#You can connect the multiple servers by using node Exporter
+#Download the Linux based node_exporter software from GitHub 
+  wget https://github.com/prometheus/node_exporter/releases/download/v1.7.0/node_exporter-1.7.0.linux-amd64.tar.gz
+
+#Extract the node_exporter Folder   
+  tar xvf node_exporter-1.7.0.linux-amd64.tar.gz 
+
+#Access the folder 
+ cd node_exporter-1.7.0.linux-amd64/
+ cp node_exporter /usr/local/bin
+ 
+#Create the node_exporter.service file for the below [Unit, Service, Install] by using VI editor.   
+vi /etc/systemd/system/node_exporter.service
+
+[Unit]
+Description=Prometheus Node Exporter service
+After=network.target
+
+[Service]
+Type=Simple
+ExecStart=/usr/local/bin/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+
+#Reload the node_exporter service 
+ systemctl daemon-reload
+
+#Status of the node_exporter service
+ service node_exporter start
+ service node_exporter status
+
+#Access the Prometheus folder include the node exporter Port: 9100
+  cd /usr/local/bin/
+
+#Access the Prometheus folder  
+  cd prometheus/
+
+#Edit the yaml file for to add the external server details <IPaddress>:Port
+  vi prometheus.yml
+
+ - job_name: "node_exporter"
+    static_configs:
+      - targets: ["<IP Address>:9100"]
+
+#Restart the node_exporter service  
+    service prometheus restart
+
+***********************************************************************************************
+GRAFANA INSTALLATION AND CONFIG - DATA VISULAZATION TOOL
+---------------------------------------------------------------
+#Download the Grafana 
+  sudo nano /etc/yum.repos.d/grafana.repo
+
+#Copy the below lines in Grafana repo and CONTROL+X Enter Y 
+[grafana]
+name=grafana
+baseurl=https://packages.grafana.com/oss/rpm
+repo_gpgcheck=1
+enabled=1
+gpgcheck=1
+gpgkey=https://packages.grafana.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+#Install the Grafana
+ sudo yum install grafana -y
+
+#Reload the Daemon and start the Grafana Server
+   sudo systemctl daemon-reload
+   sudo systemctl start grafana-server
+   sudo service grafana-server status
+
+#Grafana PORT : 3000
+# User/ PWD  is admin / admin 
+#Change the password once login into appln
+
+   
